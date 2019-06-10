@@ -1,7 +1,7 @@
 # coding: utf-8
 #!/usr/bin/ruby
 
-task :default => [:xcode, :zshell, :mac_os, :brew, :cask, :computer_name, :vim_config, :git_config, :ssh_config, :nvm_install, :cask_configs]
+task :default => [:zshell, :mac_os, :brew, :cask, :computer_name, :vim_config, :git_config, :ssh_config, :nvm_install, :cask_configs]
 task :continue => [:brew, :cask, :vim_config, :git_config, :ssh_config, :nvm_install, :cask_configs, :computer_name]
 
 def curl what
@@ -37,24 +37,6 @@ end
 
 #### Download steps ####
 
-desc "Installs xcode. Waits for input while installer is running."
-task :xcode do
-  begin
-    sh "xcode-select --install"
-  rescue
-    puts "Looks like xcode failed... was it already installed?"
-  ensure
-    puts "Wait until xcode is installed... When done, press [ENTER] to continue."
-    STDIN.gets.strip
-  end
-
-  begin
-    puts "Now, let's accept the XCode licenses from command line!"
-    sh "sudo xcodebuild -license accept"
-  rescue
-  end
-end
-
 desc "Installs Oh-my zshell"
 task :zshell do
   sh "curl -L http://install.ohmyz.sh | sh"
@@ -82,7 +64,7 @@ end
 
 desc "Sets some macOS preferred settings"
 task :mac_os do
-  sh "git clone https://github.com/haf/macos.git"
+  sh "git clone https://github.com/lapponiandevil/osx.git"
   in_dir "macos" do
     install_homebrew
     install_profiles
@@ -103,9 +85,7 @@ task :brew do
     colordiff
     ctags
     editorconfig
-    erlang
     fzf
-    git
     go
     kubernetes-helm
     jq
@@ -120,7 +100,6 @@ task :brew do
     rbenv
     readline
     stern
-    travis
     tree
     ucspi-tcp
     yarn
@@ -138,13 +117,11 @@ task :cask do
     iterm2
 
     1password
-    adobe-creative-cloud
     authy
     caffeine
     chromium
     copyclip
     docker
-    dotnet-sdk
     firefox
     font-awesome-terminal-fonts
     font-fontawesome
@@ -159,11 +136,7 @@ task :cask do
     font-robotomono-nerd-font
     font-robotomono-nerd-font-mono
     google-cloud-sdk
-    gpg-suite
-    mailmate
-    omnigraffle
     postman
-    resilio-sync
     sketch
     slack
     spectacle
@@ -172,7 +145,6 @@ task :cask do
     typora
     visual-studio-code
 
-    rider
     android-studio
   |.join(' ')
   cask packages
