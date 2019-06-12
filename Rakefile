@@ -39,7 +39,7 @@ end
 
 desc "Installs Oh-my zshell"
 task :zshell do
-  sh "curl -L http://install.ohmyz.sh | sh"
+  sh "curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh | sh"
 end
 
 def install_homebrew
