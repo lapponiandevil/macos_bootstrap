@@ -1,6 +1,6 @@
 [alias]
   ad = add . -A
-  co = commit
+  co = checkout
   com = commit -m
   st = status
 
