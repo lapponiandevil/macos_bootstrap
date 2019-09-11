@@ -1,6 +1,6 @@
 ## macOS setup
 
-    curl -O https://raw.githubusercontent.com/lapponiandevil/osx/master/Rakefile && rake
+    curl -O https://raw.githubusercontent.com/lapponiandevil/macos_bootstrap/master/Rakefile && rake
 
 ### What it does
 
