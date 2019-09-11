@@ -1,8 +1,8 @@
 # coding: utf-8
 #!/usr/bin/ruby
 
-task :default => [:zshell, :mac_os, :brew, :cask, :computer_name, :vim_config, :git_config, :ssh_config, :nvm_install, :cask_configs]
-task :continue => [:brew, :cask, :vim_config, :git_config, :ssh_config, :nvm_install, :cask_configs, :computer_name]
+task :default => [:zshell, :mac_os, :computer_name, :brew, :cask, :configs]
+task :continue => [:brew, :cask, :configs]
 
 def curl what
   sh "curl -O #{what}"
@@ -40,6 +40,10 @@ end
 desc "Installs Oh-my zshell"
 task :zshell do
   sh "curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh | sh"
+end
+
+task :macos_config do
+  sh "./config-macos.sh"
 end
 
 def install_homebrew
@@ -150,16 +154,6 @@ task :cask do
   cask packages
 end
 
-desc "Configure the installed casks"
-task :cask_configs do
-  sh "mkdir -p ~/.iterm && cp com.googlecode.iterm2.plist ~/.iterm"
-
-  # https://github.com/eczarny/spectacle/issues/244
-  sh %{cp spectacle.json "#{ENV['HOME']}/Library/Application Support/Spectacle/Shortcuts.json"}
-  sh %{mkdir -p "#{ENV['HOME']}/Library/Application Support/Code/User"}
-  sh %{cp vscode.json "#{ENV['HOME']}/Library/Application Support/Code/User/settings.json"}
-end
-
 desc "Sets computer name. Asks for input"
 task :computer_name do
   # Set computer name (as done via System Preferences → Sharing)
@@ -171,14 +165,18 @@ task :computer_name do
   sh "sudo launchctl load -w /System/Library/LaunchDaemons/com.apple.locate.plist"
 end
 
+desc "Configure the installed casks"
+task :cask_configs do
+  sh "mkdir -p ~/.iterm && cp com.googlecode.iterm2.plist ~/.iterm"
+
+  # https://github.com/eczarny/spectacle/issues/244
+  sh %{cp spectacle.json "#{ENV['HOME']}/Library/Application Support/Spectacle/Shortcuts.json"}
+  sh %{mkdir -p "#{ENV['HOME']}/Library/Application Support/Code/User"}
+  sh %{cp vscode.json "#{ENV['HOME']}/Library/Application Support/Code/User/settings.json"}
+end
+
 desc 'Configure vim'
 task :vim_config do
-  #in_dir ENV['HOME'] do
-  #  system 'git clone https://github.com/amix/vimrc.git ~/.vim_runtime'
-  #  in_dir '.vim_runtime' do
-  #    sh 'chmod +x install_awesome_vimrc.sh && ./install_awesome_vimrc.sh'
-  #  end
-  #end
   sh "cp .vimrc ~/.vimrc"
 end
 
@@ -210,6 +208,13 @@ task :nvm_install do
   sh "./nvm-install-lts.sh"
 end
 
-task :macos_config do
-  sh "./config-macos.sh"
+desc "Configure Casks, Vim, Git, ssh and nvm"
+task :configs do
+  in_dir "macos_bootstrap" do
+    :cask_configs
+    :vim_config
+    :git_config
+    :ssh_config
+    :nvm_install
+  end
 end
