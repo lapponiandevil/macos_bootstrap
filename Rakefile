@@ -64,8 +64,8 @@ end
 
 desc "Sets some macOS preferred settings"
 task :mac_os do
-  sh "git clone https://github.com/lapponiandevil/osx.git"
-  in_dir "macos" do
+  sh "git clone https://github.com/lapponiandevil/macos_bootstrap.git"
+  in_dir "macos_bootstrap" do
     install_homebrew
     install_profiles
   end
