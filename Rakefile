@@ -66,12 +66,22 @@ task :install_profiles do
   install_profiles
 end
 
+def set_default_shell
+  puts "Changing default shell to ZSH"
+  sh "chsh -s $(which zsh)"
+end
+
+task :set_default_shell do
+  set_default_shell
+end
+
 desc "Sets some macOS preferred settings"
 task :mac_os do
   sh "git clone https://github.com/lapponiandevil/macos_bootstrap.git"
   in_dir "macos_bootstrap" do
     install_homebrew
     install_profiles
+    set_default_shell
   end
 end
 
@@ -204,17 +214,21 @@ task :ssh_config do
   end
 end
 
-task :nvm_install do
-  sh "./nvm-install-lts.sh"
+desc 'Remind user to run NVM installation script'
+task :nvm_reminder do
+  puts "Please run the script './macos_bootstrap/nvm-install-lts.sh' to complete the installation."
 end
 
 desc "Configure Casks, Vim, Git, ssh and nvm"
 task :configs do
   in_dir "macos_bootstrap" do
-    :cask_configs
-    :vim_config
-    :git_config
-    :ssh_config
-    :nvm_install
+    %w| cask_configs
+        vim_config
+        git_config
+        ssh_config
+        nvm_reminder
+    |.each do |t|
+      Rake::Task[t].invoke()
+    end
   end
 end
