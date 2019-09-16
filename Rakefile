@@ -42,10 +42,6 @@ task :zshell do
   sh "curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh | sh"
 end
 
-task :macos_config do
-  sh "./config-macos.sh"
-end
-
 def install_homebrew
   sh %{/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"} unless \
     Dir.exists? '/usr/local/Homebrew'
@@ -175,6 +171,11 @@ task :computer_name do
   sh "sudo launchctl load -w /System/Library/LaunchDaemons/com.apple.locate.plist"
 end
 
+desc "Configure MacOS settings"
+task :macos_config do
+  sh "./config-macos.sh"
+end
+
 desc "Configure the installed casks"
 task :cask_configs do
   sh "mkdir -p ~/.iterm && cp com.googlecode.iterm2.plist ~/.iterm"
@@ -222,7 +223,8 @@ end
 desc "Configure Casks, Vim, Git, ssh and nvm"
 task :configs do
   in_dir "macos_bootstrap" do
-    %w| cask_configs
+    %w| macos_config
+        cask_configs
         vim_config
         git_config
         ssh_config
