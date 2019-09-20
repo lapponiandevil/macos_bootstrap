@@ -94,6 +94,7 @@ task :brew do
     automake
     colordiff
     ctags
+    dive
     editorconfig
     fzf
     go
